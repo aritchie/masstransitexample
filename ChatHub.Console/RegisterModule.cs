@@ -7,10 +7,10 @@ namespace ChatHub
 {
     public class RegisterModule : Module
     {
-        public string Uri { get; set; } = "rabbitmq://192.168.99.100";
-        public string UserName { get; set; } = "guest";
-        public string Password { get; set; } = "guest";
-        public string QueueName { get; set; } = "chathub_web";
+        public string Uri { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string QueueName { get; set; }
 
 
         protected override void Load(ContainerBuilder builder)
@@ -18,16 +18,15 @@ namespace ChatHub
             base.Load(builder);
 
             builder.RegisterConsumers(this.ThisAssembly);
-
             builder
                 .Register(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
-                    cfg.Host(new Uri(this.Uri), x =>
+                    var host = cfg.Host(new Uri(this.Uri), x =>
                     {
                         x.Username(this.UserName);
                         x.Password(this.Password);
                     });
-                    cfg.ReceiveEndpoint(this.QueueName, e => e.LoadFrom(context));
+                    cfg.ReceiveEndpoint(host, this.QueueName, e => e.LoadFrom(context));
                 }))
                 .As<IBus>()
                 .As<IBusControl>()

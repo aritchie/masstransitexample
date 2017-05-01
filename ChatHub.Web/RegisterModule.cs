@@ -23,12 +23,12 @@ namespace ChatHub.Web
                 .Register(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
                     //cfg.AddReceiveEndpointSpecification(new RabbitMqReceiveEndpointSpecification());
-                    cfg.Host(new Uri(this.Uri), x =>
+                    var host = cfg.Host(new Uri(this.Uri), x =>
                     {
                         x.Username(this.UserName);
                         x.Password(this.Password);
                     });
-                    cfg.ReceiveEndpoint(this.QueueName, e => e.LoadFrom(context));
+                    cfg.ReceiveEndpoint(host, this.QueueName, e => e.LoadFrom(context));
                 }))
                 .As<IBus>()
                 .As<IBusControl>()

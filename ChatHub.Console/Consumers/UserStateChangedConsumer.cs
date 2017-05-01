@@ -10,7 +10,8 @@ namespace ChatHub.Consumers
     {
         public Task Consume(ConsumeContext<IUserStateChanged> context)
         {
-
+            var action = context.Message.Connected ? "Connected" : "Disconnected";
+            Console.WriteLine($"User '{context.Message.Name}' {action}");
             return Task.FromResult(new object());
         }
     }

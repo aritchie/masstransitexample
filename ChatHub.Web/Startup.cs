@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Configuration;
+using System.Reflection;
 using Autofac;
+using Autofac.Integration.SignalR;
+using ChatHub.Web.Hubs;
 using MassTransit;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Owin.Cors;
 using Owin;
 
@@ -11,11 +15,15 @@ namespace ChatHub.Web
 {
     public class Startup
     {
-        public static IContainer Container { get; private set; }
-
-
         public void Configuration(IAppBuilder app)
         {
+            var cfg = new HubConfiguration
+            {
+                EnableDetailedErrors = true,
+                EnableJavaScriptProxies = true,
+                EnableJSONP = true
+            };
+
             var builder = new ContainerBuilder();
             builder.RegisterModule(new RegisterModule
             {
@@ -24,25 +32,21 @@ namespace ChatHub.Web
                 Password = ConfigurationManager.AppSettings["queue.password"],
                 QueueName = ConfigurationManager.AppSettings["queue.name"]
             });
+            builder.RegisterHubs(Assembly.GetExecutingAssembly());
+            builder
+                .Register(_ => cfg.Resolver.Resolve<IConnectionManager>().GetHubContext<CentralHub, ICentralHub>())
+                .As<IHubContext<ICentralHub>>()
+                .SingleInstance();
 
             var container = builder.Build();
-            container.Resolve<IBusControl>().Start();
-            //app.UseCors(CorsOptions.AllowAll);
-            Container = container;
+            cfg.Resolver = new AutofacDependencyResolver(container);
 
+            app.UseAutofacMiddleware(container);
+            app.UseCors(CorsOptions.AllowAll);
             app.UseStaticFiles("");
+            app.MapSignalR(cfg);
 
-            app.Map("/signalr", map =>
-            {
-
-                var cfg = new HubConfiguration
-                {
-                    EnableDetailedErrors = true,
-                    EnableJavaScriptProxies = true,
-                    EnableJSONP = true
-                };
-                map.RunSignalR(cfg);
-            });
+            container.Resolve<IBusControl>().Start();
         }
     }
 }

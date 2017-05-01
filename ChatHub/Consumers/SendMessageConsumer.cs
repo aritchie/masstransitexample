@@ -19,10 +19,10 @@ namespace ChatHub.Consumers
         public async Task Consume(ConsumeContext<ISendMessage> context)
         {
             Console.WriteLine("Incoming Message");
-            var attempt = context.GetRetryAttempt();
-            if (attempt < 3)
-                //Console.WriteLine("");
-                throw new ArgumentException("Get lost, you haven't tried hard enough yet");
+            //var attempt = context.GetRetryAttempt();
+            //if (attempt < 3)
+            //    //Console.WriteLine("");
+            //    throw new ArgumentException("Get lost, you haven't tried hard enough yet");
 
             if (!this.filter.IsValid(context.Message.Body))
             {

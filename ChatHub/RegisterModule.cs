@@ -22,13 +22,13 @@ namespace ChatHub
             builder
                 .Register(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
-                    cfg.Host(new Uri(this.Uri), x =>
+                    var host = cfg.Host(new Uri(this.Uri), x =>
                     {
                         x.Username(this.UserName);
                         x.Password(this.Password);
                     });
-                    cfg.UseRetry(x => x.Interval(3, TimeSpan.FromSeconds(1))); // retry 3 times with a 1 second break
-                    cfg.ReceiveEndpoint(this.QueueName, e => e.LoadFrom(context));
+                    //cfg.UseRetry(x => x.Interval(3, TimeSpan.FromSeconds(1))); // retry 3 times with a 1 second break
+                    cfg.ReceiveEndpoint(host, this.QueueName, e => e.LoadFrom(context));
                 }))
                 .As<IBus>()
                 .As<IBusControl>()

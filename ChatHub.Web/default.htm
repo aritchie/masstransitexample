@@ -32,13 +32,15 @@
     $(function() {
         var chat = $.connection.chatHub;
 
-        chat.client.UserStateChanged = function(msg) {
+        chat.client.OnUserStateChanged = function(msg) {
             var c = msg.Connected ? " Connected" : " Disconnected";
             writeMsg(msg.Name + c);
         };
 
-        chat.client.MessageReceived = function (msg) {
-            var from = $('<div />').text(msg.From).html();
+        chat.client.OnMessageReceived = function (msg) {
+            var user = msg.From == $.connection.hub.id ? "YOU" : msg.From;
+
+            var from = $('<div />').text(user).html();
             var body = $('<div />').text(msg.Body).html();
             writeMsg('<strong>[' + from + ']</strong>: ' + body);
         };

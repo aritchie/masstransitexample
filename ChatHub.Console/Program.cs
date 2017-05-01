@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using Autofac;
-using ChatHub.Contracts;
+using ChatHub.Contracts.Commands;
 using MassTransit;
 
 
@@ -43,7 +43,7 @@ namespace ChatHub
 
                         Console.WriteLine("Sending message");
 
-                        bus.Publish(new SendMessageCommand
+                        bus.Publish(new SendMessage
                         {
                             Body = msg,
                             From = "Console"
