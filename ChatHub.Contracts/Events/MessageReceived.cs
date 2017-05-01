@@ -1,9 +1,9 @@
 ﻿using System;
 
 
-namespace ChatHub.Contracts
+namespace ChatHub.Contracts.Events
 {
-    public class MessageReceivedEvent : IMessageReceivedEvent
+    public class MessageReceived : IMessageReceived
     {
         public string Body { get; set; }
         public string From { get; set; }

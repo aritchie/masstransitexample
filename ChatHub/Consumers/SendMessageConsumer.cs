@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChatHub.Contracts;
+using ChatHub.Contracts.Commands;
+using ChatHub.Contracts.Events;
 using ChatHub.Services;
 using MassTransit;
 
 
-namespace ChatHub
+namespace ChatHub.Consumers
 {
-    public class SendMessageCommandConsumer : IConsumer<ISendMessageCommand>
+    public class SendMessageCommandConsumer : IConsumer<ISendMessage>
     {
         readonly IMessageFilter filter;
 
@@ -15,7 +16,7 @@ namespace ChatHub
         public SendMessageCommandConsumer(IMessageFilter filter) => this.filter = filter;
 
 
-        public async Task Consume(ConsumeContext<ISendMessageCommand> context)
+        public async Task Consume(ConsumeContext<ISendMessage> context)
         {
             Console.WriteLine("Incoming Message");
             var attempt = context.GetRetryAttempt();
@@ -30,7 +31,7 @@ namespace ChatHub
             }
 
             Console.WriteLine("Message good - publishing back out to consumers");
-            await context.Publish(new MessageReceivedEvent
+            await context.Publish(new MessageReceived
             {
                 Body = context.Message.Body,
                 From = context.Message.From,

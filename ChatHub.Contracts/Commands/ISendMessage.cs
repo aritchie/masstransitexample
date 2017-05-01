@@ -1,9 +1,9 @@
 ﻿using System;
 
 
-namespace ChatHub.Contracts
+namespace ChatHub.Contracts.Commands
 {
-    public interface ISendMessageCommand
+    public interface ISendMessage
     {
         string Body { get; set; }
         string From { get; set; }

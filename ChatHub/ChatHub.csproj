@@ -64,10 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Consumers\UserStateChangeConsumer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterModule.cs" />
-    <Compile Include="SendMessageCommandConsumer.cs" />
+    <Compile Include="Consumers\SendMessageConsumer.cs" />
     <Compile Include="Services\BadWordsMessageFilter.cs" />
     <Compile Include="Services\IMessageFilter.cs" />
     <Compile Include="Services\NoMessageFilter.cs" />

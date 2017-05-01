@@ -22,6 +22,7 @@ namespace ChatHub.Web
             builder
                 .Register(context => Bus.Factory.CreateUsingRabbitMq(cfg =>
                 {
+                    //cfg.AddReceiveEndpointSpecification(new RabbitMqReceiveEndpointSpecification());
                     cfg.Host(new Uri(this.Uri), x =>
                     {
                         x.Username(this.UserName);

@@ -30,6 +30,12 @@
 
     $(function() {
         var chat = $.connection.chatHub;
+
+        chat.client.UserStateChanged = function(msg) {
+            var c = msg.Connected ? " Connected" : " Disconnected";
+            writeMsg(msg.Name + c);
+        };
+
         chat.client.MessageReceived = function(msg) {
             var from = $('<div />').text(msg.From).html();
             var body = $('<div />').text(msg.Body).html();
