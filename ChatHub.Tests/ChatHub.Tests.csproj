@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\BadWordsMessageFilterTests.cs" />
+    <Compile Include="Services\BadWordsMessageCensorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ChatHub.Contracts\ChatHub.Contracts.csproj">

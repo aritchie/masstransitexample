@@ -9,10 +9,10 @@ namespace ChatHub
 {
     public class RegisterModule : Module
     {
-        public string Uri { get; set; } = "rabbitmq://192.168.99.100";
-        public string UserName { get; set; } = "guest";
-        public string Password { get; set; } = "guest";
-        public string QueueName { get; set; } = "chathub_main";
+        public string Uri { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
+        public string QueueName { get; set; }
 
 
         protected override void Load(ContainerBuilder builder)
@@ -36,8 +36,8 @@ namespace ChatHub
 
             builder.RegisterConsumers(this.ThisAssembly);
             builder
-                .RegisterType<NoMessageFilter>()
-                //.RegisterType<BadWordsMessageFilter>()
+                //.RegisterType<NoMessageCensor>()
+                .RegisterType<BadWordsMessageCensor>()
                 .AsImplementedInterfaces()
                 .SingleInstance();
         }

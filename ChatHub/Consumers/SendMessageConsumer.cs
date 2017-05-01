@@ -10,10 +10,10 @@ namespace ChatHub.Consumers
 {
     public class SendMessageCommandConsumer : IConsumer<ISendMessage>
     {
-        readonly IMessageFilter filter;
+        readonly IMessageCensor filter;
 
 
-        public SendMessageCommandConsumer(IMessageFilter filter) => this.filter = filter;
+        public SendMessageCommandConsumer(IMessageCensor filter) => this.filter = filter;
 
 
         public async Task Consume(ConsumeContext<ISendMessage> context)
@@ -24,16 +24,10 @@ namespace ChatHub.Consumers
             //    //Console.WriteLine("");
             //    throw new ArgumentException("Get lost, you haven't tried hard enough yet");
 
-            if (!this.filter.IsValid(context.Message.Body))
-            {
-                Console.WriteLine("Message was filtered out");
-                return;
-            }
-
-            Console.WriteLine("Message good - publishing back out to consumers");
+            var body = this.filter.Scrub(context.Message.Body);
             await context.Publish(new MessageReceived
             {
-                Body = context.Message.Body,
+                Body = body,
                 From = context.Message.From,
                 SendDate = DateTimeOffset.UtcNow // this is an error - it could have been sent hours ago
             });
