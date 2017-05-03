@@ -69,9 +69,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterModule.cs" />
     <Compile Include="Consumers\SendMessageConsumer.cs" />
-    <Compile Include="Services\BadWordsMessageFilter.cs" />
-    <Compile Include="Services\IMessageCensor.cs" />
-    <Compile Include="Services\NoMessageCensor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -83,6 +80,10 @@
     <ProjectReference Include="..\ChatHub.Contracts\ChatHub.Contracts.csproj">
       <Project>{ed1577fc-6ee2-4f43-95ef-adb5f348a81e}</Project>
       <Name>ChatHub.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ChatHub.Services.Censoring\ChatHub.Services.Censoring.csproj">
+      <Project>{f922f3da-0d2d-418b-99be-8331884cf88f}</Project>
+      <Name>ChatHub.Services.Censoring</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

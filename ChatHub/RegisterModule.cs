@@ -1,7 +1,6 @@
 ﻿using System;
 using Autofac;
 using ChatHub.Services;
-using GreenPipes;
 using MassTransit;
 
 
