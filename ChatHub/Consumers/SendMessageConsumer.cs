@@ -13,7 +13,10 @@ namespace ChatHub.Consumers
         readonly IMessageCensor filter;
 
 
-        public SendMessageCommandConsumer(IMessageCensor filter) => this.filter = filter;
+        public SendMessageCommandConsumer(IMessageCensor filter)
+        {
+            this.filter = filter;
+        }
 
 
         public async Task Consume(ConsumeContext<ISendMessage> context)
