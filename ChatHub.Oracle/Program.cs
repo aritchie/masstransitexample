@@ -2,8 +2,6 @@
 using System.Configuration;
 using Autofac;
 using MassTransit;
-using Oracle.ManagedDataAccess.Client;
-using OracleInternal.Common;
 
 
 namespace ChatHub.Oracle

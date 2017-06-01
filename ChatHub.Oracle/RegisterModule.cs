@@ -23,6 +23,11 @@ namespace ChatHub.Oracle
                 .AutoActivate()
                 .SingleInstance();
 
+            builder
+                .RegisterType<Repository>()
+                .AsImplementedInterfaces()
+                .SingleInstance();
+
             builder.RegisterConsumers(this.ThisAssembly);
             builder
                 .Register(context => Bus.Factory.CreateUsingRabbitMq(cfg =>

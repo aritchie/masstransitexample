@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Configuration;
-using System.Data;
 using Autofac;
 using ChatHub.Contracts.Commands;
 using MassTransit;
-using Oracle.ManagedDataAccess.Client;
 
 
 namespace ChatHub.Oracle
@@ -12,49 +9,36 @@ namespace ChatHub.Oracle
     public class OracleListener : IStartable
     {
         readonly IBus bus;
+        readonly IRepository repository;
 
 
-        public OracleListener(IBus bus)
+        public OracleListener(IBus bus, IRepository repository)
         {
             this.bus = bus;
+            this.repository = repository;
         }
 
 
         public void Start()
         {
-            var conn = new OracleConnection(ConfigurationManager.AppSettings["ConnectionString"]);
-            var cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM CHAT";
-            cmd.AddRowid = true;
-            cmd.Notification.IsNotifiedOnce = false;
-
-            var dependency = new OracleDependency(cmd);
-            dependency.OnChange += async (sender, e) =>
+            this.repository.StartListener();
+            this.repository.DbNotification += async (sender, message) =>
             {
-                if (e.Type != OracleNotificationType.Change || e.Info != OracleNotificationInfo.Insert)
-                    return;
-
-                foreach (DataRow row in e.Details.Rows)
+                if (message.Received)
                 {
-                    var recv = (int)row["RECV"] == 1;
-
-                    if (recv)
+                    Console.WriteLine("MESSAGE RECEIVED FROM: " + message.From);
+                    Console.WriteLine(message.Message);
+                }
+                else
+                {
+                    await this.bus.Publish(new SendMessage
                     {
-                        Console.WriteLine("MESSAGE RECEIVED FROM: " + (string)row["FROM"]);
-                        Console.WriteLine((string)row["BODY"]);
-                    }
-                    else
-                    {
-                        await this.bus.Publish(new SendMessage
-                        {
-                            From = "THE GREAT ORACLE",
-                            Body = (string)row["BODY"]
-                        });
-                        Console.WriteLine("Message Sent - " + (string)row["BODY"]);
-                    }
+                        From = "THE GREAT ORACLE",
+                        Body = message.Message
+                    });
+                    Console.WriteLine("Message Sent - " + message.Message);
                 }
             };
-            Console.WriteLine("The all-powerful ORACLE LISTENER is active....Larry is watching too... because he's a pervert");
         }
     }
 }
